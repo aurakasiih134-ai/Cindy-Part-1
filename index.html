@@ -1,83 +1,146 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <title>!!! SECURITY ALERT !!!</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <title>PERINGATAN!</title>
   <style>
-    body{
-      background:#000;
-      color:#39ff14;
-      font-family:"Courier New", monospace;
-      padding:20px;
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      color: red;
+      font-family: monospace;
+      text-align: center;
     }
-    h1{ color:#ff3b3b; }
-    #console{ white-space:pre-wrap; margin-top:20px; }
-    .line{ opacity:0; transform:translateY(6px); transition:all .25s ease; }
-    .line.show{ opacity:1; transform:none; }
-    .danger{ color:#ff3b3b; font-weight:bold; }
-    .muted{ color:rgba(57,255,20,0.6); }
-    .progress{height:10px;background:#111;border-radius:4px;overflow:hidden;margin:10px 0;}
-    .bar{height:100%;width:0%;background:#ff3b3b;transition:width .5s linear;}
+
+    /* Canvas untuk Matrix */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .warning {
+      font-size: 100px;
+      margin-top: 50px;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+    h1 {
+      margin-top: 10px;
+      text-shadow: 0 0 10px red, 0 0 20px darkred;
+      animation: glitch 2s infinite;
+    }
+    .text {
+      margin-top: 20px;
+      font-size: 20px;
+      white-space: pre-line;
+    }
+    #typed {
+      display: inline-block;
+      border-right: 2px solid red;
+      padding-right: 5px;
+      animation: cursorBlink 0.7s infinite;
+    }
+    @keyframes cursorBlink {
+      0%, 50% { border-color: red; }
+      51%, 100% { border-color: transparent; }
+    }
+
+    /* Efek glitch */
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px red, -2px -2px blue; }
+      20% { text-shadow: -2px -2px lime, 2px 2px blue; }
+      40% { text-shadow: 2px -2px red, -2px 2px lime; }
+      60% { text-shadow: -2px 2px blue, 2px -2px red; }
+      80% { text-shadow: 2px 2px lime, -2px -2px red; }
+      100% { text-shadow: 0 0 10px red, 0 0 20px darkred; }
+    }
   </style>
 </head>
 <body>
-  <h1>!! SYSTEM ALERT !!</h1>
-  <div id="console"></div>
+  <!-- Background Matrix -->
+  <canvas id="matrix"></canvas>
+
+  <div class="warning">⚠️</div>
+  <h1>PERINGATAN PERANGKAT ANDA TELAH DIRETAS!</h1>
+  <div class="text"><span id="typed"></span></div>
 
   <script>
-    const lines = [
-      "! PERINGATAN PERANGKAT ANDA TELAH DI RETAS !",
-      "",
-      "- Mengambil data",
-      "- Meriset data",
-      "- Menghapus sistem",
-      "- Me-nonaktifkan sistem",
-      "",
-      "Status: Menjalankan exploit..."
-    ];
+    // -------- Matrix Background --------
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
 
-    const consoleEl = document.getElementById('console');
-    let i = 0;
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    function showNext(){
-      if(i >= lines.length) return;
-      const text = lines[i];
-      const lineEl = document.createElement('div');
-      lineEl.className = 'line';
-      if(text.includes('PERINGATAN')){
-        lineEl.innerHTML = '<span class="danger">'+text+'</span>';
-      }else{
-        lineEl.textContent = text;
-      }
-      consoleEl.appendChild(lineEl);
-      setTimeout(()=> lineEl.classList.add('show'),30);
+    const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%^&*()*&^%".split("");
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
 
-      if(text.toLowerCase().includes('status')){
-        const progress=document.createElement('div');
-        progress.className='progress';
-        const bar=document.createElement('div');
-        bar.className='bar';
-        progress.appendChild(bar);
-        consoleEl.appendChild(progress);
+    for (let x = 0; x < columns; x++) drops[x] = 1;
 
-        let pct=0;
-        const t=setInterval(()=>{
-          pct+=Math.floor(Math.random()*12)+8;
-          if(pct>100) pct=100;
-          bar.style.width=pct+'%';
-          if(pct>=100){
-            clearInterval(t);
-            // progress berhenti di 100% tanpa reveal
-          }
-        },400);
-      }
-      i++;
-      if(i<lines.length){
-        setTimeout(showNext,900);
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#0F0"; // warna hijau Matrix
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
       }
     }
-    showNext();
+
+    setInterval(draw, 33);
+
+    // -------- Text Hacker Warning --------
+    const text = `- Mengambil data
+- Meriset data
+- Menghapus sistem
+- Menonaktifkan perangkat
+- Mengecek jaringan
+- Mengakses kamera
+- Mengompresi file sensitif
+- Mengirim data ke server anonim
+- Membersihkan jejak sistem
+- Status: Operasi berhasil...`;
+
+    let i = 0;
+
+    function playBeep() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      oscillator.type = "square";
+      oscillator.frequency.setValueAtTime(400, ctx.currentTime);
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.1);
+    }
+
+    function typeWriter() {
+      if (i < text.length) {
+        document.getElementById("typed").innerHTML += text.charAt(i);
+        playBeep();
+        i++;
+        setTimeout(typeWriter, 70);
+      }
+    }
+
+    window.onload = typeWriter;
   </script>
 </body>
 </html>
