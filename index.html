@@ -1,117 +1,226 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚠️ PERINGATAN</title>
+  <title>HACKED</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
       overflow: hidden;
       background: black;
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚠️ PERINGATAN</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: monospace;
+      color: #ff0000;
+      font-family: 'Courier New', monospace;
     }
+
     canvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
-    .content {
+
+    .center {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-      z-index: 1;
-      color: red;
-      width: 90%;
+      color: #ff0000;
+      text-shadow: 0 0 20px red, 0 0 40px darkred;
     }
-    .warning {
-      font-size: 10vw;
+
+    .center h1 {
+      font-size: 6vw;
+      animation: glitch 0.8s infinite;
+    }
+
+    .progress {
+      margin-top: 20px;
+      width: 80vw;
+      height: 30px;
+      border: 2px solid red;
+      margin-left: auto;
+      margin-right: auto;
+      background: black;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: red;
+      width: 0%;
+      transition: width 0.2s linear;
+    }
+
+    .skull {
+      font-size: 8vw;
+      margin-top: 20px;
+      display: none;
       animation: blink 1s infinite;
     }
-    .title {
-      font-size: 6vw;
-      margin: 15px 0;
-      text-shadow: 0 0 15px red, 0 0 30px darkred;
-    }
-    .typed {
-      font-size: 4vw;
-      white-space: pre-line;
-      text-align: center;
-    }
-    .skull {
-      font-size: 3.5vw;
+
+    .popup {
+      position: absolute;
+      background: rgba(255,0,0,0.8);
       color: white;
-      margin-top: 20px;
-      display: none;
-      white-space: pre;
+      padding: 5px 10px;
+      font-size: 14px;
+      border: 1px solid #fff;
+      animation: fadeOut 1.5s forwards;
     }
-    .loading {
-      font-size: 4vw;
-      color: lime;
-      margin-top: 20px;
-      display: none;
-    }
+
     @keyframes blink {
       50% { opacity: 0; }
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px red; }
+      20% { text-shadow: -2px -2px lime; }
+      40% { text-shadow: 2px -2px blue; }
+      60% { text-shadow: -2px 2px yellow; }
+      80% { text-shadow: 2px 2px magenta; }
+      100% { text-shadow: -2px -2px cyan; }
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .glitch-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255,0,0,0.1),
+        rgba(0,255,0,0.1) 2px
+      );
+      mix-blend-mode: difference;
+      animation: flicker 0.2s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
   <canvas id="matrix"></canvas>
-  <div class="content">
-    <div class="warning">⚠️</div>
-    <div class="title">PERINGATAN! PERANGKAT ANDA TELAH DIRETAS!</div>
-    <div class="typed" id="typed"></div>
-    <div class="loading" id="loading"></div>
-    <div class="skull" id="skull">
-       ______
-     .-'      `-.
-    /            \
-   |,  .-.  .-.  ,|
-   | )(_o/  \o_)( |
-   |/     /\     \|
-   (_     ^^     _)
-    \__|IIIIII|__/
-     | \IIIIII/ |
-     \          /
-      `--------`
+  <div class="center">
+    <div style="font-size:10vw;">⚠️</div>
+    <h1>PERANGKAT ANDA TELAH DIRETAS!</h1>
+    <p id="typing"></p>
+    <div class="progress">
+      <div class="progress-bar" id="bar"></div>
     </div>
+    <div class="skull" id="skull">💀</div>
   </div>
-
-  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <div class="glitch-overlay"></div>
+  <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
   <script>
-    // MATRIX EFFECT
+    // Matrix background
     const canvas = document.getElementById("matrix");
     const ctx = canvas.getContext("2d");
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    const letters = "01";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
+    const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%^&*";
+    const font_size = 14;
+    const columns = canvas.width / font_size;
     const drops = Array(Math.floor(columns)).fill(1);
 
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(0, 0,
+    function draw() {
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = font_size + "px monospace";
+      for(let i=0; i<drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random()*chars.length));
+        ctx.fillText(text, i*font_size, drops[i]*font_size);
+        if(drops[i]*font_size > canvas.height && Math.random() > 0.975) drops[i]=0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 40);
+
+    // Typing effect
+    const textLines = [
+      "- Mengambil data...",
+      "- Meriset data...",
+      "- Menghapus sistem...",
+      "- Menonaktifkan sistem...",
+      "Loading..."
+    ];
+    let lineIndex = 0;
+    let charIndex = 0;
+    const typing = document.getElementById("typing");
+
+    function type() {
+      if(lineIndex < textLines.length) {
+        if(charIndex < textLines[lineIndex].length) {
+          typing.innerHTML += textLines[lineIndex].charAt(charIndex);
+          charIndex++;
+          setTimeout(type, 50);
+        } else {
+          typing.innerHTML += "<br>";
+          lineIndex++;
+          charIndex = 0;
+          setTimeout(type, 300);
+        }
+      } else {
+        loadBar();
+      }
+    }
+    type();
+
+    // Progress bar
+    function loadBar() {
+      let bar = document.getElementById("bar");
+      let width = 0;
+      let interval = setInterval(() => {
+        if(width >= 100) {
+          clearInterval(interval);
+          document.getElementById("skull").style.display = "block";
+          virusPopups();
+        } else {
+          width++;
+          bar.style.width = width + "%";
+        }
+      }, 80);
+    }
+
+    // Virus popups
+    function virusPopups() {
+      const msgs = [
+        "ERROR: SYSTEM BREACH",
+        "ACCESS GRANTED",
+        "DATA LEAK DETECTED",
+        "OVERRIDE COMPLETE",
+        "MALWARE INSTALLED",
+        "VIRUS EXECUTED"
+      ];
+      const beep = document.getElementById("beep");
+
+      setInterval(() => {
+        const div = document.createElement("div");
+        div.className = "popup";
+        div.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        div.style.top = Math.random()*window.innerHeight + "px";
+        div.style.left = Math.random()*window.innerWidth + "px";
+        document.body.appendChild(div);
+        beep.play().catch(()=>{});
+        setTimeout(()=>div.remove(),1500);
+      }, 800);
+    }
+  </script>
+</body>
+</html>
