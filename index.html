@@ -2,16 +2,82 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>System Security Console</title>
+  <title>!!! SECURITY ALERT !!!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{
+      background:#000;
+      color:#39ff14;
+      font-family:"Courier New", monospace;
+      padding:20px;
+    }
+    h1{ color:#ff3b3b; }
+    #console{ white-space:pre-wrap; margin-top:20px; }
+    .line{ opacity:0; transform:translateY(6px); transition:all .25s ease; }
+    .line.show{ opacity:1; transform:none; }
+    .danger{ color:#ff3b3b; font-weight:bold; }
+    .muted{ color:rgba(57,255,20,0.6); }
+    .progress{height:10px;background:#111;border-radius:4px;overflow:hidden;margin:10px 0;}
+    .bar{height:100%;width:0%;background:#ff3b3b;transition:width .5s linear;}
+  </style>
 </head>
-<body style="background:black;color:#00ff9a;font-family:monospace;padding:20px;">
-  <h2>System Security Console</h2>
-  <p>Menjalankan exploit...</p>
-  <pre>
-[BOOT] Initializing...
-[OK] System Breached!
-ACCESS GRANTED — root@localhost
-  </pre>
-  <p style="color:gray">👉 Tenang, ini hanya simulasi 😄</p>
+<body>
+  <h1>!! SYSTEM ALERT !!</h1>
+  <div id="console"></div>
+
+  <script>
+    const lines = [
+      "! PERINGATAN PERANGKAT ANDA TELAH DI RETAS !",
+      "",
+      "- Mengambil data",
+      "- Meriset data",
+      "- Menghapus sistem",
+      "- Me-nonaktifkan sistem",
+      "",
+      "Status: Menjalankan exploit..."
+    ];
+
+    const consoleEl = document.getElementById('console');
+    let i = 0;
+
+    function showNext(){
+      if(i >= lines.length) return;
+      const text = lines[i];
+      const lineEl = document.createElement('div');
+      lineEl.className = 'line';
+      if(text.includes('PERINGATAN')){
+        lineEl.innerHTML = '<span class="danger">'+text+'</span>';
+      }else{
+        lineEl.textContent = text;
+      }
+      consoleEl.appendChild(lineEl);
+      setTimeout(()=> lineEl.classList.add('show'),30);
+
+      if(text.toLowerCase().includes('status')){
+        const progress=document.createElement('div');
+        progress.className='progress';
+        const bar=document.createElement('div');
+        bar.className='bar';
+        progress.appendChild(bar);
+        consoleEl.appendChild(progress);
+
+        let pct=0;
+        const t=setInterval(()=>{
+          pct+=Math.floor(Math.random()*12)+8;
+          if(pct>100) pct=100;
+          bar.style.width=pct+'%';
+          if(pct>=100){
+            clearInterval(t);
+            // progress berhenti di 100% tanpa reveal
+          }
+        },400);
+      }
+      i++;
+      if(i<lines.length){
+        setTimeout(showNext,900);
+      }
+    }
+    showNext();
+  </script>
 </body>
 </html>
