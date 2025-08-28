@@ -1,175 +1,139 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WARNING</title>
-<style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background: black;
-    color: red;
-    font-family: monospace;
-    text-align: center;
-  }
-
-  canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    z-index: -1;
-  }
-
-  .warning {
-    font-size: 2em;
-    margin-top: 8vh;
-    animation: blink 1s infinite alternate;
-  }
-
-  @keyframes blink {
-    from { opacity: 1; }
-    to { opacity: 0.3; }
-  }
-
-  .steps {
-    margin-top: 20px;
-    line-height: 1.6em;
-    font-size: 1.2em;
-  }
-
-  #progress {
-    width: 80%;
-    height: 20px;
-    margin: 20px auto;
-    background: #222;
-    border: 2px solid red;
-  }
-  #bar {
-    height: 100%;
-    width: 0%;
-    background: red;
-  }
-
-  #skull {
-    font-size: 5em;
-    margin-top: 20px;
-    display: none;
-  }
-
-  .popup {
-    position: fixed;
-    background: red;
-    color: white;
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 2px solid black;
-    animation: fadeout 1s forwards;
-  }
-
-  @keyframes fadeout {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-
-  .glitch {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: repeating-linear-gradient(
-      transparent,
-      rgba(255,0,0,0.2) 2px
-    );
-    animation: glitchAnim 0.3s infinite;
-    mix-blend-mode: screen;
-    pointer-events: none;
-  }
-
-  @keyframes glitchAnim {
-    0% { transform: translate(0,0); }
-    25% { transform: translate(5px,-5px); }
-    50% { transform: translate(-5px,5px); }
-    75% { transform: translate(5px,5px); }
-    100% { transform: translate(0,0); }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRANK HACKER</title>
+  <style>
+    body {
+      background: black;
+      color: red;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+    .warning {
+      font-size: 22px;
+      font-weight: bold;
+      color: yellow;
+      margin-top: 20px;
+    }
+    #process {
+      margin-top: 20px;
+      white-space: pre-line;
+      font-size: 16px;
+    }
+    #progress {
+      width: 90%;
+      height: 20px;
+      border: 1px solid red;
+      margin: 20px auto;
+      background: black;
+    }
+    #bar {
+      width: 0%;
+      height: 100%;
+      background: red;
+    }
+    #skull {
+      display: none;
+      font-size: 120px;
+      margin-top: 30px;
+      animation: flicker 1s infinite alternate;
+    }
+    #arya {
+      display: none;
+      font-size: 26px;
+      color: white;
+      margin-top: 10px;
+      animation: glitch 0.3s infinite;
+    }
+    @keyframes flicker {
+      from { opacity: 0.7; }
+      to { opacity: 1; }
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px red; }
+      50% { text-shadow: -2px -2px lime; }
+      100% { text-shadow: 2px -2px blue; }
+    }
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+    }
+  </style>
 </head>
 <body>
-<canvas id="matrix"></canvas>
+  <canvas id="matrix"></canvas>
+  <div class="warning">⚠️ PERINGATAN! SISTEM ANDA DIRETAS!</div>
+  <div id="process"></div>
+  <div id="progress"><div id="bar"></div></div>
+  <div id="skull">💀</div>
+  <div id="arya">ARYAAA?!</div>
 
-<div class="warning">⚠️ PERINGATAN! PERANGKAT ANDA DIRETAS!</div>
-
-<div class="steps" id="steps">
-  <div>Mengambil data...</div>
-  <div>Meriset data...</div>
-  <div>Menghapus sistem...</div>
-  <div>Menonaktifkan sistem...</div>
-</div>
-
-<div id="progress"><div id="bar"></div></div>
-<div id="skull">💀</div>
-<div class="glitch"></div>
-
-<script>
-// Matrix effect
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
-const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function drawMatrix() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#0F0";
-  ctx.font = fontSize + "px monospace";
-  for (let i = 0; i < drops.length; i++) {
-    const text = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-      drops[i] = 0;
+  <script>
+    // teks proses
+    const proses = [
+      "- Mengambil data pribadi...",
+      "- Mengakses kamera & mikrofon...",
+      "- Mereset file sistem...",
+      "- Menghapus partisi utama...",
+      "- Menonaktifkan jaringan...",
+      "- Instalasi virus selesai..."
+    ];
+    let i = 0;
+    const processDiv = document.getElementById("process");
+    function showNext() {
+      if (i < proses.length) {
+        processDiv.innerHTML += proses[i] + "\n";
+        i++;
+        setTimeout(showNext, 1000);
+      }
     }
-    drops[i]++;
-  }
-}
-setInterval(drawMatrix, 35);
+    showNext();
 
-// Progress bar + skull
-let progress = 0;
-const bar = document.getElementById("bar");
-const skull = document.getElementById("skull");
-const loading = setInterval(() => {
-  progress++;
-  bar.style.width = progress + "%";
-  if (progress >= 100) {
-    clearInterval(loading);
-    skull.style.display = "block";
-    startPopups();
-  }
-}, 80);
+    // progress bar
+    let width = 0;
+    const bar = document.getElementById("bar");
+    const skull = document.getElementById("skull");
+    const arya = document.getElementById("arya");
+    const loading = setInterval(() => {
+      if (width >= 100) {
+        clearInterval(loading);
+        skull.style.display = "block";
+        arya.style.display = "block";
+      } else {
+        width++;
+        bar.style.width = width + "%";
+      }
+    }, 120);
 
-// Random virus popups (custom teks)
-function startPopups() {
-  setInterval(() => {
-    const popup = document.createElement("div");
-    popup.classList.add("popup");
-    popup.innerText = [
-      "ARYAAA?!",
-      "LOGIN GAGAL",
-      "DATA DIHAPUS",
-      "SYSTEM CRASH",
-      "HACK COMPLETE"
-    ][Math.floor(Math.random()*5)];
-    popup.style.top = Math.random() * (window.innerHeight - 50) + "px";
-    popup.style.left = Math.random() * (window.innerWidth - 100) + "px";
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 1000);
-  }, 500);
-}
-</script>
+    // efek matrix hijau
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+    function draw() {
+      ctx.fillStyle = "rgba(0,0,0,0.05)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = "#0F0";
+      ctx.font = fontSize + "px monospace";
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 33);
+  </script>
 </body>
 </html>
