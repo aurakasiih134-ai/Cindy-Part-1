@@ -1,226 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>HACKED</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: black;
-      color: #ff0000;
-      font-family: 'Courier New', monospace;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WARNING</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    color: red;
+    font-family: monospace;
+    text-align: center;
+  }
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
+  canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+  }
 
-    .center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #ff0000;
-      text-shadow: 0 0 20px red, 0 0 40px darkred;
-    }
+  .warning {
+    font-size: 2em;
+    margin-top: 20vh;
+    animation: blink 1s infinite alternate;
+  }
 
-    .center h1 {
-      font-size: 6vw;
-      animation: glitch 0.8s infinite;
-    }
+  @keyframes blink {
+    from { opacity: 1; }
+    to { opacity: 0.3; }
+  }
 
-    .progress {
-      margin-top: 20px;
-      width: 80vw;
-      height: 30px;
-      border: 2px solid red;
-      margin-left: auto;
-      margin-right: auto;
-      background: black;
-      position: relative;
-    }
+  #progress {
+    width: 80%;
+    height: 20px;
+    margin: 20px auto;
+    background: #222;
+    border: 2px solid red;
+  }
+  #bar {
+    height: 100%;
+    width: 0%;
+    background: red;
+  }
 
-    .progress-bar {
-      height: 100%;
-      background: red;
-      width: 0%;
-      transition: width 0.2s linear;
-    }
+  #skull {
+    font-size: 5em;
+    margin-top: 20px;
+    display: none;
+  }
 
-    .skull {
-      font-size: 8vw;
-      margin-top: 20px;
-      display: none;
-      animation: blink 1s infinite;
-    }
+  .popup {
+    position: fixed;
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 2px solid black;
+    animation: fadeout 1s forwards;
+  }
 
-    .popup {
-      position: absolute;
-      background: rgba(255,0,0,0.8);
-      color: white;
-      padding: 5px 10px;
-      font-size: 14px;
-      border: 1px solid #fff;
-      animation: fadeOut 1.5s forwards;
-    }
+  @keyframes fadeout {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
 
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
+  .glitch {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      transparent,
+      rgba(255,0,0,0.2) 2px
+    );
+    animation: glitchAnim 0.3s infinite;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
 
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px red; }
-      20% { text-shadow: -2px -2px lime; }
-      40% { text-shadow: 2px -2px blue; }
-      60% { text-shadow: -2px 2px yellow; }
-      80% { text-shadow: 2px 2px magenta; }
-      100% { text-shadow: -2px -2px cyan; }
-    }
-
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-
-    .glitch-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,0,0,0.1),
-        rgba(0,255,0,0.1) 2px
-      );
-      mix-blend-mode: difference;
-      animation: flicker 0.2s infinite;
-      pointer-events: none;
-    }
-
-    @keyframes flicker {
-      0% { opacity: 0; }
-      50% { opacity: 0.3; }
-      100% { opacity: 0; }
-    }
-  </style>
+  @keyframes glitchAnim {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(5px,-5px); }
+    50% { transform: translate(-5px,5px); }
+    75% { transform: translate(5px,5px); }
+    100% { transform: translate(0,0); }
+  }
+</style>
 </head>
 <body>
-  <canvas id="matrix"></canvas>
-  <div class="center">
-    <div style="font-size:10vw;">⚠️</div>
-    <h1>PERANGKAT ANDA TELAH DIRETAS!</h1>
-    <p id="typing"></p>
-    <div class="progress">
-      <div class="progress-bar" id="bar"></div>
-    </div>
-    <div class="skull" id="skull">💀</div>
-  </div>
-  <div class="glitch-overlay"></div>
-  <audio id="beep" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+<canvas id="matrix"></canvas>
 
-  <script>
-    // Matrix background
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%^&*";
-    const font_size = 14;
-    const columns = canvas.width / font_size;
-    const drops = Array(Math.floor(columns)).fill(1);
+<div class="warning">⚠️ PERINGATAN! PERANGKAT ANDA DIRETAS!</div>
+<div id="progress"><div id="bar"></div></div>
+<div id="skull">💀</div>
+<div class="glitch"></div>
 
-    function draw() {
-      ctx.fillStyle = "rgba(0,0,0,0.05)";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = "#0F0";
-      ctx.font = font_size + "px monospace";
-      for(let i=0; i<drops.length; i++) {
-        const text = chars.charAt(Math.floor(Math.random()*chars.length));
-        ctx.fillText(text, i*font_size, drops[i]*font_size);
-        if(drops[i]*font_size > canvas.height && Math.random() > 0.975) drops[i]=0;
-        drops[i]++;
-      }
+<script>
+// Matrix effect
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+
+function drawMatrix() {
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0F0";
+  ctx.font = fontSize + "px monospace";
+  for (let i = 0; i < drops.length; i++) {
+    const text = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+      drops[i] = 0;
     }
-    setInterval(draw, 40);
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 35);
 
-    // Typing effect
-    const textLines = [
-      "- Mengambil data...",
-      "- Meriset data...",
-      "- Menghapus sistem...",
-      "- Menonaktifkan sistem...",
-      "Loading..."
-    ];
-    let lineIndex = 0;
-    let charIndex = 0;
-    const typing = document.getElementById("typing");
+// Progress bar + skull
+let progress = 0;
+const bar = document.getElementById("bar");
+const skull = document.getElementById("skull");
+const loading = setInterval(() => {
+  progress++;
+  bar.style.width = progress + "%";
+  if (progress >= 100) {
+    clearInterval(loading);
+    skull.style.display = "block";
+    startPopups();
+  }
+}, 80);
 
-    function type() {
-      if(lineIndex < textLines.length) {
-        if(charIndex < textLines[lineIndex].length) {
-          typing.innerHTML += textLines[lineIndex].charAt(charIndex);
-          charIndex++;
-          setTimeout(type, 50);
-        } else {
-          typing.innerHTML += "<br>";
-          lineIndex++;
-          charIndex = 0;
-          setTimeout(type, 300);
-        }
-      } else {
-        loadBar();
-      }
-    }
-    type();
-
-    // Progress bar
-    function loadBar() {
-      let bar = document.getElementById("bar");
-      let width = 0;
-      let interval = setInterval(() => {
-        if(width >= 100) {
-          clearInterval(interval);
-          document.getElementById("skull").style.display = "block";
-          virusPopups();
-        } else {
-          width++;
-          bar.style.width = width + "%";
-        }
-      }, 80);
-    }
-
-    // Virus popups
-    function virusPopups() {
-      const msgs = [
-        "ERROR: SYSTEM BREACH",
-        "ACCESS GRANTED",
-        "DATA LEAK DETECTED",
-        "OVERRIDE COMPLETE",
-        "MALWARE INSTALLED",
-        "VIRUS EXECUTED"
-      ];
-      const beep = document.getElementById("beep");
-
-      setInterval(() => {
-        const div = document.createElement("div");
-        div.className = "popup";
-        div.innerText = msgs[Math.floor(Math.random()*msgs.length)];
-        div.style.top = Math.random()*window.innerHeight + "px";
-        div.style.left = Math.random()*window.innerWidth + "px";
-        document.body.appendChild(div);
-        beep.play().catch(()=>{});
-        setTimeout(()=>div.remove(),1500);
-      }, 800);
-    }
-  </script>
+// Random virus popups
+function startPopups() {
+  setInterval(() => {
+    const popup = document.createElement("div");
+    popup.classList.add("popup");
+    popup.innerText = ["ERROR: SYSTEM BREACH", "DATA LEAK DETECTED", "ACCESS GRANTED", "VIRUS INSTALLED"][Math.floor(Math.random()*4)];
+    popup.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    popup.style.left = Math.random() * (window.innerWidth - 100) + "px";
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 1000);
+  }, 500);
+}
+</script>
 </body>
 </html>
