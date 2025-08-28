@@ -4,136 +4,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PRANK HACKER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       background: black;
       color: red;
-      font-family: monospace;
+      font-family: 'Share Tech Mono', monospace;
       text-align: center;
       padding: 20px;
       overflow: hidden;
     }
     .warning {
-      font-size: 22px;
+      font-size: 32px;
       font-weight: bold;
-      color: yellow;
+      line-height: 1.5em;
+      animation: blink 1s infinite;
+      white-space: pre-line; /* biar teks bisa multi-line */
+    }
+    .process {
+      font-size: 20px;
       margin-top: 20px;
+      line-height: 1.8em;
     }
-    #process {
-      margin-top: 20px;
-      white-space: pre-line;
-      font-size: 16px;
-    }
-    #progress {
-      width: 90%;
-      height: 20px;
-      border: 1px solid red;
-      margin: 20px auto;
-      background: black;
-    }
-    #bar {
-      width: 0%;
-      height: 100%;
-      background: red;
-    }
-    #skull {
-      display: none;
-      font-size: 120px;
+    .progress {
       margin-top: 30px;
-      animation: flicker 1s infinite alternate;
+      width: 80%;
+      height: 25px;
+      background: #222;
+      border: 2px solid red;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: lime;
+      transition: width 0.3s;
+    }
+    .skull {
+      font-size: 100px;
+      margin-top: 30px;
+      display: none;
+      color: white;
     }
     #arya {
       display: none;
-      font-size: 26px;
+      font-size: 40px;
       color: white;
       margin-top: 10px;
       animation: glitch 0.3s infinite;
     }
-    @keyframes flicker {
-      from { opacity: 0.7; }
-      to { opacity: 1; }
+
+    @keyframes blink {
+      50% { opacity: 0; }
     }
     @keyframes glitch {
       0% { text-shadow: 2px 2px red; }
-      50% { text-shadow: -2px -2px lime; }
-      100% { text-shadow: 2px -2px blue; }
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
+      25% { text-shadow: -2px -2px lime; }
+      50% { text-shadow: 2px -2px blue; }
+      75% { text-shadow: -2px 2px yellow; }
+      100% { text-shadow: 2px 2px red; }
     }
   </style>
 </head>
 <body>
-  <canvas id="matrix"></canvas>
-  <div class="warning">⚠️ PERINGATAN! SISTEM ANDA DIRETAS!</div>
-  <div id="process"></div>
-  <div id="progress"><div id="bar"></div></div>
-  <div id="skull">💀</div>
+  <div class="warning">⚠️WARNING⚠️
+!!! PERANGKAT ANDA TELAH DI RETAS !!!</div>
+
+  <div class="process" id="process"></div>
+
+  <div class="progress">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <div class="skull" id="skull">💀</div>
   <div id="arya">ARYAAA?!</div>
 
   <script>
-    // teks proses
     const proses = [
       "- Mengambil data pribadi...",
-      "- Mengakses kamera & mikrofon...",
-      "- Mereset file sistem...",
-      "- Menghapus partisi utama...",
-      "- Menonaktifkan jaringan...",
-      "- Instalasi virus selesai..."
+      "- Mengakses kamera dan mikrofon...",
+      "- Meriset data sistem...",
+      "- Menghapus file penting...",
+      "- Menonaktifkan sistem keamanan...",
+      "- Menginstal virus permanen...",
+      "- Mengunggah data ke server...",
+      "- Mengunci perangkat..."
     ];
-    let i = 0;
+    let index = 0;
     const processDiv = document.getElementById("process");
-    function showNext() {
-      if (i < proses.length) {
-        processDiv.innerHTML += proses[i] + "\n";
-        i++;
-        setTimeout(showNext, 1000);
-      }
-    }
-    showNext();
-
-    // progress bar
-    let width = 0;
     const bar = document.getElementById("bar");
     const skull = document.getElementById("skull");
     const arya = document.getElementById("arya");
-    const loading = setInterval(() => {
-      if (width >= 100) {
-        clearInterval(loading);
+
+    function showProcess() {
+      if (index < proses.length) {
+        processDiv.innerHTML += proses[index] + "<br>";
+        index++;
+        bar.style.width = (index / proses.length * 100) + "%";
+        setTimeout(showProcess, 1200);
+      } else {
         skull.style.display = "block";
         arya.style.display = "block";
-      } else {
-        width++;
-        bar.style.width = width + "%";
-      }
-    }, 120);
-
-    // efek matrix hijau
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-    for (let x = 0; x < columns; x++) drops[x] = 1;
-    function draw() {
-      ctx.fillStyle = "rgba(0,0,0,0.05)";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = "#0F0";
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters[Math.floor(Math.random()*letters.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if (drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
       }
     }
-    setInterval(draw, 33);
+    showProcess();
   </script>
 </body>
 </html>
