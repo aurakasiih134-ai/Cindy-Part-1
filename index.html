@@ -23,13 +23,19 @@
 
   .warning {
     font-size: 2em;
-    margin-top: 20vh;
+    margin-top: 8vh;
     animation: blink 1s infinite alternate;
   }
 
   @keyframes blink {
     from { opacity: 1; }
     to { opacity: 0.3; }
+  }
+
+  .steps {
+    margin-top: 20px;
+    line-height: 1.6em;
+    font-size: 1.2em;
   }
 
   #progress {
@@ -92,6 +98,14 @@
 <canvas id="matrix"></canvas>
 
 <div class="warning">⚠️ PERINGATAN! PERANGKAT ANDA DIRETAS!</div>
+
+<div class="steps" id="steps">
+  <div>Mengambil data...</div>
+  <div>Meriset data...</div>
+  <div>Menghapus sistem...</div>
+  <div>Menonaktifkan sistem...</div>
+</div>
+
 <div id="progress"><div id="bar"></div></div>
 <div id="skull">💀</div>
 <div class="glitch"></div>
@@ -138,12 +152,18 @@ const loading = setInterval(() => {
   }
 }, 80);
 
-// Random virus popups
+// Random virus popups (custom teks)
 function startPopups() {
   setInterval(() => {
     const popup = document.createElement("div");
     popup.classList.add("popup");
-    popup.innerText = ["ERROR: SYSTEM BREACH", "DATA LEAK DETECTED", "ACCESS GRANTED", "VIRUS INSTALLED"][Math.floor(Math.random()*4)];
+    popup.innerText = [
+      "ARYAAA?!",
+      "LOGIN GAGAL",
+      "DATA DIHAPUS",
+      "SYSTEM CRASH",
+      "HACK COMPLETE"
+    ][Math.floor(Math.random()*5)];
     popup.style.top = Math.random() * (window.innerHeight - 50) + "px";
     popup.style.left = Math.random() * (window.innerWidth - 100) + "px";
     document.body.appendChild(popup);
