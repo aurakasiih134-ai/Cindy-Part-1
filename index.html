@@ -1,114 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PRANK HACKER</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PRANK HACKER - MATRIX LAG</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    body {
-      background: black;
-      color: red;
-      font-family: 'Share Tech Mono', monospace;
-      text-align: center;
-      padding: 20px;
-      overflow: hidden;
-    }
-    .warning {
-      font-size: 32px;
-      font-weight: bold;
-      line-height: 1.5em;
-      animation: blink 1s infinite;
-      white-space: pre-line; /* biar teks bisa multi-line */
-    }
-    .process {
-      font-size: 20px;
-      margin-top: 20px;
-      line-height: 1.8em;
-    }
-    .progress {
-      margin-top: 30px;
-      width: 80%;
-      height: 25px;
-      background: #222;
-      border: 2px solid red;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .bar {
-      height: 100%;
-      width: 0%;
-      background: lime;
-      transition: width 0.3s;
-    }
-    .skull {
-      font-size: 100px;
-      margin-top: 30px;
-      display: none;
-      color: white;
-    }
-    #arya {
-      display: none;
-      font-size: 40px;
-      color: white;
-      margin-top: 10px;
-      animation: glitch 0.3s infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px red; }
-      25% { text-shadow: -2px -2px lime; }
-      50% { text-shadow: 2px -2px blue; }
-      75% { text-shadow: -2px 2px yellow; }
-      100% { text-shadow: 2px 2px red; }
-    }
+    body{margin:0;background:#000;color:#ff2b2b;font-family:'Share Tech Mono',monospace;overflow:hidden;}
+    canvas#matrix{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;}
+    .front{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;text-align:center;padding:20px;}
+    .idiot{font-size:32px;font-weight:900;color:#ff2b2b;text-shadow:0 3px 8px rgba(255,0,0,.3);margin:10px 0;}
+    .skull{font-size:110px;margin:6px 0;}
+    .warning{font-size:26px;font-weight:bold;white-space:pre-wrap;animation:blink 1s infinite;}
+    .progress{width:80%;max-width:600px;height:24px;background:#111;border:2px solid #ff2b2b;border-radius:6px;overflow:hidden;margin:15px auto;}
+    .bar{height:100%;width:0;background:lime;transition:width .3s;}
+    .console{width:90%;max-width:600px;font-size:14px;color:#ccc;background:rgba(255,255,255,0.05);border:1px dashed rgba(255,0,0,0.2);padding:12px;border-radius:6px;max-height:150px;overflow:auto;text-align:left;}
+    @keyframes blink{0%{opacity:1;}50%{opacity:.1;}100%{opacity:1;}}
   </style>
 </head>
 <body>
-  <div class="warning">⚠️WARNING⚠️
-!!! PERANGKAT ANDA TELAH DI RETAS !!!</div>
+  <canvas id="matrix"></canvas>
+  <div class="front">
+    <div class="idiot">DASAR IDIOT!!!</div>
+    <div class="skull">💀</div>
+    <div class="warning">⚠️WARNING⚠️
 
-  <div class="process" id="process"></div>
-
-  <div class="progress">
-    <div class="bar" id="bar"></div>
+!!! PERANGKAT ANDA TELAH DI RETAS!!!</div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="console" id="consoleLog">[00:00:01] Memulai skrip...</div>
   </div>
 
-  <div class="skull" id="skull">💀</div>
-  <div id="arya">ARYAAA?!</div>
-
   <script>
-    const proses = [
-      "- Mengambil data pribadi...",
-      "- Mengakses kamera dan mikrofon...",
-      "- Meriset data sistem...",
-      "- Menghapus file penting...",
-      "- Menonaktifkan sistem keamanan...",
-      "- Menginstal virus permanen...",
-      "- Mengunggah data ke server...",
-      "- Mengunci perangkat..."
-    ];
-    let index = 0;
-    const processDiv = document.getElementById("process");
-    const bar = document.getElementById("bar");
-    const skull = document.getElementById("skull");
-    const arya = document.getElementById("arya");
-
-    function showProcess() {
-      if (index < proses.length) {
-        processDiv.innerHTML += proses[index] + "<br>";
-        index++;
-        bar.style.width = (index / proses.length * 100) + "%";
-        setTimeout(showProcess, 1200);
-      } else {
-        skull.style.display = "block";
-        arya.style.display = "block";
+    // MATRIX HEAVY EFFECT
+    (function(){
+      const canvas=document.getElementById("matrix"),ctx=canvas.getContext("2d");
+      let w,h,cols,ypos,font=16;
+      const chars="01ZXCVBNMASDFGHJKLQWERTYUIOP#$%&*".split("");
+      function resize(){
+        w=canvas.width=window.innerWidth;
+        h=canvas.height=window.innerHeight;
+        cols=Math.floor(w/font);
+        ypos=Array(cols).fill(0);
       }
-    }
-    showProcess();
+      window.addEventListener("resize",resize);
+      resize();
+      function draw(){
+        // kecilin alpha biar trail panjang → makin berat
+        ctx.fillStyle="rgba(0,0,0,0.05)";
+        ctx.fillRect(0,0,w,h);
+        ctx.fillStyle="#0f0";
+        ctx.font=font+"px monospace";
+        for(let i=0;i<ypos.length;i++){
+          let text=chars[Math.floor(Math.random()*chars.length)];
+          ctx.fillText(text,i*font,ypos[i]*font);
+          if(ypos[i]*font>h && Math.random()>0.975){ypos[i]=0;}
+          ypos[i]++;
+        }
+        // panggil terus tanpa throttle → high fps → bikin HP lag
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // Progress bar & console log
+    (function(){
+      const bar=document.getElementById("bar");
+      const log=document.getElementById("consoleLog");
+      let pct=0;
+      const interval=setInterval(()=>{
+        pct+=5;
+        if(pct>=100){pct=100;clearInterval(interval);}
+        bar.style.width=pct+"%";
+        log.textContent+="\n["+new Date().toLocaleTimeString()+"] Proses "+pct+"%";
+        log.scrollTop=log.scrollHeight;
+      },300);
+    })();
   </script>
 </body>
 </html>
