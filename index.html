@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PRANK HACKER - MATRIX LAG</title>
+  <title>PRANK HACKER - MATRIX SPAM</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body{margin:0;background:#000;color:#ff2b2b;font-family:'Share Tech Mono',monospace;overflow:hidden;}
@@ -14,7 +14,7 @@
     .warning{font-size:26px;font-weight:bold;white-space:pre-wrap;animation:blink 1s infinite;}
     .progress{width:80%;max-width:600px;height:24px;background:#111;border:2px solid #ff2b2b;border-radius:6px;overflow:hidden;margin:15px auto;}
     .bar{height:100%;width:0;background:lime;transition:width .3s;}
-    .console{width:90%;max-width:600px;font-size:14px;color:#ccc;background:rgba(255,255,255,0.05);border:1px dashed rgba(255,0,0,0.2);padding:12px;border-radius:6px;max-height:150px;overflow:auto;text-align:left;}
+    .console{width:90%;max-width:600px;font-size:13px;color:#ccc;background:rgba(255,255,255,0.05);border:1px dashed rgba(255,0,0,0.2);padding:12px;border-radius:6px;max-height:220px;overflow:auto;text-align:left;}
     @keyframes blink{0%{opacity:1;}50%{opacity:.1;}100%{opacity:1;}}
   </style>
 </head>
@@ -31,7 +31,7 @@
   </div>
 
   <script>
-    // MATRIX HEAVY EFFECT
+    // MATRIX EFFECT (tetep bikin berat)
     (function(){
       const canvas=document.getElementById("matrix"),ctx=canvas.getContext("2d");
       let w,h,cols,ypos,font=16;
@@ -45,7 +45,6 @@
       window.addEventListener("resize",resize);
       resize();
       function draw(){
-        // kecilin alpha biar trail panjang → makin berat
         ctx.fillStyle="rgba(0,0,0,0.05)";
         ctx.fillRect(0,0,w,h);
         ctx.fillStyle="#0f0";
@@ -56,24 +55,45 @@
           if(ypos[i]*font>h && Math.random()>0.975){ypos[i]=0;}
           ypos[i]++;
         }
-        // panggil terus tanpa throttle → high fps → bikin HP lag
         requestAnimationFrame(draw);
       }
       draw();
     })();
 
-    // Progress bar & console log
+    // Progress bar & console spam
     (function(){
       const bar=document.getElementById("bar");
       const log=document.getElementById("consoleLog");
       let pct=0;
+
+      // progress jalan
       const interval=setInterval(()=>{
-        pct+=5;
+        pct+=3;
         if(pct>=100){pct=100;clearInterval(interval);}
         bar.style.width=pct+"%";
-        log.textContent+="\n["+new Date().toLocaleTimeString()+"] Proses "+pct+"%";
-        log.scrollTop=log.scrollHeight;
       },300);
+
+      // generator log spam
+      const fakeMessages=[
+        "Mengakses kernel...",
+        "Bypass firewall...",
+        "Mencuri data login...",
+        "Upload malware...",
+        "Encrypt file...",
+        "Menghapus log sistem...",
+        "Koneksi ke server C2...",
+        "Override keamanan BIOS...",
+        "Menyalin database...",
+        "Mendapatkan kontrol penuh..."
+      ];
+
+      setInterval(()=>{
+        const msg=fakeMessages[Math.floor(Math.random()*fakeMessages.length)];
+        const time=new Date().toLocaleTimeString();
+        log.textContent+="\n["+time+"] "+msg;
+        // biar scroll otomatis ke bawah
+        log.scrollTop=log.scrollHeight;
+      },200); // setiap 0.2 detik tambah 1 baris (spam cepat!)
     })();
   </script>
 </body>
